@@ -115,17 +115,30 @@ export default function UserDashboardPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [detailModal, setDetailModal] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
 
   const totalSteps = 2 + FORM_CONFIG.length;
 
   const loadSubmissions = async () => {
-    if (!auth.currentUser) return;
-    const data = await fetchUserSubmissions(auth.currentUser.uid);
-    setSubmissions(data);
+    if (!auth.currentUser) {
+      setPageLoading(false);
+      return;
+    }
+    try {
+      const data = await fetchUserSubmissions(auth.currentUser.uid);
+      setSubmissions(data);
+    } catch (err) {
+      console.error("Error loading submissions:", err);
+    } finally {
+      setPageLoading(false);
+    }
   };
 
   useEffect(() => {
-    loadSubmissions();
+    const timer = setTimeout(() => {
+      loadSubmissions();
+    }, 300);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleMultiSelect = (fieldKey, option) => {
@@ -443,7 +456,14 @@ export default function UserDashboardPage() {
           </button>
         </div>
 
-        {submissions.length === 0 && (
+        {pageLoading ? (
+          <div className="text-center py-24 bg-white rounded-2xl border-2 border-slate-200">
+            <div className="text-4xl mb-4">⏳</div>
+            <p className="font-body text-sm text-slate-500 tracking-wide">
+              Memuat data...
+            </p>
+          </div>
+        ) : submissions.length === 0 ? (
           <div className="text-center py-24 bg-white rounded-2xl border-2 border-slate-200">
             <div className="text-6xl mb-5">📍</div>
             <p className="font-heading font-bold text-2xl text-deepolive mb-2 tracking-tight">
@@ -459,9 +479,7 @@ export default function UserDashboardPage() {
               Tambah Spot Pertama
             </button>
           </div>
-        )}
-
-        {submissions.length > 0 && (
+        ) : (
           <div className="space-y-4">
             <div className="bg-white rounded-2xl border-2 border-slate-200 overflow-hidden">
               <table className="w-full">
