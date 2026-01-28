@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/navigation/Navbar";
 
 import HomePage from "./pages/home/HomePage";
+import SpotDetailPage from "./pages/spot/SpotDetailPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import UserDashboardPage from "./pages/dashboard/UserDashboardPage";
@@ -18,6 +19,7 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/spot/:id" element={<SpotDetailPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 

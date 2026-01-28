@@ -1,0 +1,335 @@
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../lib/firebase";
+
+const SPOT_IMAGES = [
+  "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1516826957135-700dedea698c?w=800&h=500&fit=crop",
+];
+
+const getRandomImages = (count = 3) => {
+  const shuffled = [...SPOT_IMAGES].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count);
+};
+
+export default function SpotDetailPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [spot, setSpot] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+  const [images] = useState(getRandomImages(3));
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const loadSpot = async () => {
+      setLoading(true);
+      try {
+        const spotDoc = await getDoc(doc(db, "spots", id));
+
+        if (spotDoc.exists() && spotDoc.data().status === "approved") {
+          setSpot({ id: spotDoc.id, ...spotDoc.data() });
+        } else {
+          setNotFound(true);
+        }
+      } catch (error) {
+        console.error("Error loading spot:", error);
+        setNotFound(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSpot();
+  }, [id]);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block w-10 h-10 border-3 border-softolive border-t-transparent rounded-full animate-spin mb-3"></div>
+          <p className="font-body text-sm text-slate-600 tracking-wide">
+            Memuat spot...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (notFound || !spot) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center px-4">
+        <div className="text-center max-w-md">
+          <div className="text-6xl mb-4">🔍</div>
+          <h1 className="font-heading font-bold text-2xl text-deepolive mb-2 tracking-tight">
+            Spot tidak ditemukan
+          </h1>
+          <p className="font-body text-sm text-slate-600 tracking-wide mb-6">
+            Spot yang kamu cari tidak ada atau belum disetujui
+          </p>
+          <button
+            onClick={() => navigate("/")}
+            className="bg-softolive text-white font-body font-semibold text-sm px-6 py-2.5 rounded-lg hover:bg-deepolive transition-colors tracking-wide"
+          >
+            Kembali ke Home
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      <div className="bg-white">
+        <div className="max-w-3xl mx-auto px-6 py-6 max-sm:px-4 max-sm:py-5">
+          <button
+            onClick={() => navigate("/")}
+            className="text-slate-700 font-body font-medium text-sm hover:text-softolive transition-colors tracking-wide flex items-center gap-2"
+          >
+            <span>←</span> Kembali ke Home
+          </button>
+        </div>
+      </div>
+
+      <div className="max-w-3xl mx-auto px-6 pb-8 max-sm:px-4 max-sm:pb-6">
+        <div className="relative w-full h-64 bg-slate-100 rounded-xl overflow-hidden mb-6 max-sm:h-48">
+          <img
+            src={images[currentImageIndex]}
+            alt={spot.name}
+            className="w-full h-full object-cover transition-opacity duration-500"
+          />
+
+          {images.length > 1 && (
+            <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    index === currentImageIndex
+                      ? "bg-white w-6"
+                      : "bg-white/50 hover:bg-white/75"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+
+          {spot.biaya && (
+            <div className="absolute top-4 right-4">
+              <span className="bg-white/95 backdrop-blur-sm text-deepolive font-body text-xs font-bold px-4 py-2 rounded-full border border-slate-200">
+                💰 {spot.biaya}
+              </span>
+            </div>
+          )}
+        </div>
+
+        <div className="mb-6">
+          <h1 className="font-heading font-bold text-3xl text-deepolive mb-2 tracking-tight max-sm:text-2xl">
+            {spot.name}
+          </h1>
+          <p className="font-body text-base text-slate-600 tracking-wide flex items-center gap-2 mb-3">
+            <span>📍</span> {spot.location}
+          </p>
+          <p className="font-body text-base text-slate-700 tracking-wide leading-relaxed">
+            {spot.description}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-2 mb-6">
+          {spot.wifi === "Ada" && (
+            <span className="font-body text-sm bg-blue-50 text-blue-700 px-3 py-2 rounded-lg font-semibold tracking-wide border border-blue-200">
+              📶 WiFi
+            </span>
+          )}
+          {spot.stopkontak === "Ada" && (
+            <span className="font-body text-sm bg-amber-50 text-amber-700 px-3 py-2 rounded-lg font-semibold tracking-wide border border-amber-200">
+              🔌 Stopkontak
+            </span>
+          )}
+          {spot.suasana && (
+            <span className="font-body text-sm bg-purple-50 text-purple-700 px-3 py-2 rounded-lg font-semibold tracking-wide border border-purple-200">
+              {spot.suasana === "Sepi"
+                ? "🤫"
+                : spot.suasana === "Ramai"
+                  ? "🎉"
+                  : "😊"}{" "}
+              {spot.suasana}
+            </span>
+          )}
+          {spot.durasi && (
+            <span className="font-body text-sm bg-slate-100 text-slate-700 px-3 py-2 rounded-lg font-semibold tracking-wide border border-slate-200">
+              ⏱️ {spot.durasi}
+            </span>
+          )}
+          {spot.kenyamanan && (
+            <span className="font-body text-sm bg-green-50 text-green-700 px-3 py-2 rounded-lg font-semibold tracking-wide border border-green-200">
+              🛋️ {spot.kenyamanan}
+            </span>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 mb-4 max-sm:grid-cols-1">
+          {spot.kebutuhan && spot.kebutuhan.length > 0 && (
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+              <p className="font-body text-sm font-semibold text-slate-700 tracking-wide mb-3 flex items-center gap-2">
+                <span>🎯</span> Cocok untuk
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {spot.kebutuhan.map((item) => (
+                  <span
+                    key={item}
+                    className="px-2.5 py-1 bg-white text-slate-700 text-xs font-medium rounded-md tracking-wide border border-slate-200"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {spot.waktu && spot.waktu.length > 0 && (
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+              <p className="font-body text-sm font-semibold text-slate-700 tracking-wide mb-3 flex items-center gap-2">
+                <span>⏰</span> Waktu terbaik
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {spot.waktu.map((item) => (
+                  <span
+                    key={item}
+                    className="px-2.5 py-1 bg-white text-slate-700 text-xs font-medium rounded-md tracking-wide border border-slate-200"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {spot.aktivitas && spot.aktivitas.length > 0 && (
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+              <p className="font-body text-sm font-semibold text-slate-700 tracking-wide mb-3 flex items-center gap-2">
+                <span>✨</span> Aktivitas
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {spot.aktivitas.map((item) => (
+                  <span
+                    key={item}
+                    className="px-2.5 py-1 bg-white text-slate-700 text-xs font-medium rounded-md tracking-wide border border-slate-200"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {spot.tipeKunjungan && spot.tipeKunjungan.length > 0 && (
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+              <p className="font-body text-sm font-semibold text-slate-700 tracking-wide mb-3 flex items-center gap-2">
+                <span>👥</span> Untuk siapa
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {spot.tipeKunjungan.map((item) => (
+                  <span
+                    key={item}
+                    className="px-2.5 py-1 bg-white text-slate-700 text-xs font-medium rounded-md tracking-wide border border-slate-200"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {(spot.kepadatan || spot.fleksibilitas || spot.polaKunjungan) && (
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6">
+            <div className="grid grid-cols-3 gap-6 max-sm:grid-cols-1 max-sm:gap-4">
+              {spot.kepadatan && (
+                <div>
+                  <p className="font-body text-xs font-semibold text-slate-500 tracking-wide mb-2 flex items-center gap-1">
+                    <span>👥</span> Kepadatan
+                  </p>
+                  <p className="font-body text-base text-slate-700 tracking-wide font-medium">
+                    {spot.kepadatan}
+                  </p>
+                </div>
+              )}
+              {spot.fleksibilitas && (
+                <div>
+                  <p className="font-body text-xs font-semibold text-slate-500 tracking-wide mb-2 flex items-center gap-1">
+                    <span>🚪</span> Fleksibilitas
+                  </p>
+                  <p className="font-body text-base text-slate-700 tracking-wide font-medium">
+                    {spot.fleksibilitas}
+                  </p>
+                </div>
+              )}
+              {spot.polaKunjungan && (
+                <div>
+                  <p className="font-body text-xs font-semibold text-slate-500 tracking-wide mb-2 flex items-center gap-1">
+                    <span>🔄</span> Pola Kunjungan
+                  </p>
+                  <p className="font-body text-base text-slate-700 tracking-wide font-medium">
+                    {spot.polaKunjungan}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        <div className="bg-gradient-to-br from-softolive to-deepolive text-white rounded-xl p-6 border border-softolive max-sm:p-5">
+          <div className="max-w-xl mx-auto text-center">
+            <h3 className="font-heading font-bold text-xl mb-2 tracking-tight max-sm:text-lg">
+              Punya rekomendasi spot lain?
+            </h3>
+            <p className="font-body text-sm text-white/90 tracking-wide mb-5 leading-relaxed max-sm:text-sm">
+              Bagikan tempat nongkrong favoritmu dan bantu komunitas menemukan
+              spot yang pas
+            </p>
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="bg-white text-deepolive font-body font-semibold text-sm px-6 py-2.5 rounded-lg hover:bg-slate-100 transition-colors tracking-wide"
+            >
+              Tambah Spot Baru
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white border-t border-slate-200 mt-12">
+        <div className="max-w-3xl mx-auto px-6 py-6 max-sm:px-4 max-sm:py-5">
+          <div className="text-center">
+            <a
+              href="https://github.com/Spesialis-Ngopi-Dadakan"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-body text-sm text-slate-600 hover:text-softolive transition-colors tracking-wide"
+            >
+              Spesialis Ngopi Dadakan
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

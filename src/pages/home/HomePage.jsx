@@ -248,6 +248,7 @@ export default function HomePage() {
           {filtered.map((spot) => (
             <div
               key={spot.id}
+              onClick={() => navigate(`/spot/${spot.id}`)}
               className="bg-white border-2 border-slate-200 rounded-2xl overflow-hidden hover:border-softolive transition-all cursor-pointer group"
             >
               <div className="relative w-full h-52 bg-slate-100 overflow-hidden">
