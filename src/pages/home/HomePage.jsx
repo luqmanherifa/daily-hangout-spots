@@ -417,9 +417,6 @@ export default function HomePage() {
                   >
                     Tambah Spot Sekarang
                   </button>
-                  <div className="font-body text-sm text-white/80 tracking-wide">
-                    Gratis • Cepat • Mudah
-                  </div>
                 </>
               ) : (
                 <>
