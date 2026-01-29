@@ -2,6 +2,27 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
+import {
+  SpinnerIcon,
+  SearchIcon,
+  ArrowLeftIcon,
+  MoneyIcon,
+  LocationIcon,
+  WifiIcon,
+  PlugIcon,
+  QuietIcon,
+  PartyIcon,
+  NeutralIcon,
+  TimerIcon,
+  CouchIcon,
+  TargetIcon,
+  ClockIcon,
+  SparklesIcon,
+  UserGroupIcon,
+  PeopleGroupIcon,
+  DoorOpenIcon,
+  RepeatIcon,
+} from "../../components/icons.jsx";
 
 const SPOT_IMAGES = [
   "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=500&fit=crop",
@@ -64,7 +85,7 @@ export default function SpotDetailPage() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block w-10 h-10 border-3 border-softolive border-t-transparent rounded-full animate-spin mb-3"></div>
+          <SpinnerIcon className="inline-block w-10 h-10 text-softolive animate-spin mb-3" />
           <p className="font-body text-sm text-slate-600 tracking-wide">
             Memuat spot...
           </p>
@@ -77,7 +98,7 @@ export default function SpotDetailPage() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center px-4">
         <div className="text-center max-w-md">
-          <div className="text-6xl mb-4">🔍</div>
+          <SearchIcon className="w-20 h-20 text-slate-300 mx-auto mb-4" />
           <h1 className="font-heading font-bold text-2xl text-deepolive mb-2 tracking-tight">
             Spot tidak ditemukan
           </h1>
@@ -103,7 +124,8 @@ export default function SpotDetailPage() {
             onClick={() => navigate("/")}
             className="text-slate-700 font-body font-medium text-sm hover:text-softolive transition-colors tracking-wide flex items-center gap-2"
           >
-            <span>←</span> Kembali ke Home
+            <ArrowLeftIcon className="w-4 h-4" />
+            Kembali ke Home
           </button>
         </div>
       </div>
@@ -134,8 +156,9 @@ export default function SpotDetailPage() {
 
           {spot.biaya && (
             <div className="absolute top-4 right-4">
-              <span className="bg-white/95 backdrop-blur-sm text-deepolive font-body text-xs font-bold px-4 py-2 rounded-full border border-slate-200">
-                💰 {spot.biaya}
+              <span className="bg-white/95 backdrop-blur-sm text-deepolive font-body text-xs font-bold px-4 py-2 rounded-full border border-slate-200 flex items-center gap-1.5">
+                <MoneyIcon className="w-3.5 h-3.5 text-green-600" />
+                {spot.biaya}
               </span>
             </div>
           )}
@@ -146,7 +169,8 @@ export default function SpotDetailPage() {
             {spot.name}
           </h1>
           <p className="font-body text-base text-slate-600 tracking-wide flex items-center gap-2 mb-3">
-            <span>📍</span> {spot.location}
+            <LocationIcon className="w-4 h-4 text-red-500" />
+            {spot.location}
           </p>
           <p className="font-body text-base text-slate-700 tracking-wide leading-relaxed">
             {spot.description}
@@ -155,33 +179,39 @@ export default function SpotDetailPage() {
 
         <div className="flex flex-wrap gap-2 mb-6">
           {spot.wifi === "Ada" && (
-            <span className="font-body text-sm bg-blue-50 text-blue-700 px-3 py-2 rounded-lg font-semibold tracking-wide border border-blue-200">
-              📶 WiFi
+            <span className="font-body text-sm bg-blue-50 text-blue-700 px-3 py-2 rounded-lg font-semibold tracking-wide border border-blue-200 flex items-center gap-1.5">
+              <WifiIcon className="w-4 h-4" />
+              WiFi
             </span>
           )}
           {spot.stopkontak === "Ada" && (
-            <span className="font-body text-sm bg-amber-50 text-amber-700 px-3 py-2 rounded-lg font-semibold tracking-wide border border-amber-200">
-              🔌 Stopkontak
+            <span className="font-body text-sm bg-amber-50 text-amber-700 px-3 py-2 rounded-lg font-semibold tracking-wide border border-amber-200 flex items-center gap-1.5">
+              <PlugIcon className="w-4 h-4" />
+              Stopkontak
             </span>
           )}
           {spot.suasana && (
-            <span className="font-body text-sm bg-purple-50 text-purple-700 px-3 py-2 rounded-lg font-semibold tracking-wide border border-purple-200">
-              {spot.suasana === "Sepi"
-                ? "🤫"
-                : spot.suasana === "Ramai"
-                  ? "🎉"
-                  : "😊"}{" "}
+            <span className="font-body text-sm bg-purple-50 text-purple-700 px-3 py-2 rounded-lg font-semibold tracking-wide border border-purple-200 flex items-center gap-1.5">
+              {spot.suasana === "Sepi" ? (
+                <QuietIcon className="w-4 h-4" />
+              ) : spot.suasana === "Ramai" ? (
+                <PartyIcon className="w-4 h-4" />
+              ) : (
+                <NeutralIcon className="w-4 h-4" />
+              )}
               {spot.suasana}
             </span>
           )}
           {spot.durasi && (
-            <span className="font-body text-sm bg-slate-100 text-slate-700 px-3 py-2 rounded-lg font-semibold tracking-wide border border-slate-200">
-              ⏱️ {spot.durasi}
+            <span className="font-body text-sm bg-slate-100 text-slate-700 px-3 py-2 rounded-lg font-semibold tracking-wide border border-slate-200 flex items-center gap-1.5">
+              <TimerIcon className="w-4 h-4 text-slate-600" />
+              {spot.durasi}
             </span>
           )}
           {spot.kenyamanan && (
-            <span className="font-body text-sm bg-green-50 text-green-700 px-3 py-2 rounded-lg font-semibold tracking-wide border border-green-200">
-              🛋️ {spot.kenyamanan}
+            <span className="font-body text-sm bg-green-50 text-green-700 px-3 py-2 rounded-lg font-semibold tracking-wide border border-green-200 flex items-center gap-1.5">
+              <CouchIcon className="w-4 h-4" />
+              {spot.kenyamanan}
             </span>
           )}
         </div>
@@ -190,7 +220,8 @@ export default function SpotDetailPage() {
           {spot.kebutuhan && spot.kebutuhan.length > 0 && (
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <p className="font-body text-sm font-semibold text-slate-700 tracking-wide mb-3 flex items-center gap-2">
-                <span>🎯</span> Cocok untuk
+                <TargetIcon className="w-4 h-4 text-softolive" />
+                Cocok untuk
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {spot.kebutuhan.map((item) => (
@@ -208,7 +239,8 @@ export default function SpotDetailPage() {
           {spot.waktu && spot.waktu.length > 0 && (
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <p className="font-body text-sm font-semibold text-slate-700 tracking-wide mb-3 flex items-center gap-2">
-                <span>⏰</span> Waktu terbaik
+                <ClockIcon className="w-4 h-4 text-blue-600" />
+                Waktu terbaik
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {spot.waktu.map((item) => (
@@ -226,7 +258,8 @@ export default function SpotDetailPage() {
           {spot.aktivitas && spot.aktivitas.length > 0 && (
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <p className="font-body text-sm font-semibold text-slate-700 tracking-wide mb-3 flex items-center gap-2">
-                <span>✨</span> Aktivitas
+                <SparklesIcon className="w-4 h-4 text-yellow-500" />
+                Aktivitas
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {spot.aktivitas.map((item) => (
@@ -244,7 +277,8 @@ export default function SpotDetailPage() {
           {spot.tipeKunjungan && spot.tipeKunjungan.length > 0 && (
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <p className="font-body text-sm font-semibold text-slate-700 tracking-wide mb-3 flex items-center gap-2">
-                <span>👥</span> Untuk siapa
+                <UserGroupIcon className="w-4 h-4 text-purple-600" />
+                Untuk siapa
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {spot.tipeKunjungan.map((item) => (
@@ -265,8 +299,9 @@ export default function SpotDetailPage() {
             <div className="grid grid-cols-3 gap-6 max-sm:grid-cols-1 max-sm:gap-4">
               {spot.kepadatan && (
                 <div>
-                  <p className="font-body text-xs font-semibold text-slate-500 tracking-wide mb-2 flex items-center gap-1">
-                    <span>👥</span> Kepadatan
+                  <p className="font-body text-xs font-semibold text-slate-500 tracking-wide mb-2 flex items-center gap-1.5">
+                    <PeopleGroupIcon className="w-3.5 h-3.5 text-slate-600" />
+                    Kepadatan
                   </p>
                   <p className="font-body text-base text-slate-700 tracking-wide font-medium">
                     {spot.kepadatan}
@@ -275,8 +310,9 @@ export default function SpotDetailPage() {
               )}
               {spot.fleksibilitas && (
                 <div>
-                  <p className="font-body text-xs font-semibold text-slate-500 tracking-wide mb-2 flex items-center gap-1">
-                    <span>🚪</span> Fleksibilitas
+                  <p className="font-body text-xs font-semibold text-slate-500 tracking-wide mb-2 flex items-center gap-1.5">
+                    <DoorOpenIcon className="w-3.5 h-3.5 text-slate-600" />
+                    Fleksibilitas
                   </p>
                   <p className="font-body text-base text-slate-700 tracking-wide font-medium">
                     {spot.fleksibilitas}
@@ -285,8 +321,9 @@ export default function SpotDetailPage() {
               )}
               {spot.polaKunjungan && (
                 <div>
-                  <p className="font-body text-xs font-semibold text-slate-500 tracking-wide mb-2 flex items-center gap-1">
-                    <span>🔄</span> Pola Kunjungan
+                  <p className="font-body text-xs font-semibold text-slate-500 tracking-wide mb-2 flex items-center gap-1.5">
+                    <RepeatIcon className="w-3.5 h-3.5 text-slate-600" />
+                    Pola Kunjungan
                   </p>
                   <p className="font-body text-base text-slate-700 tracking-wide font-medium">
                     {spot.polaKunjungan}
