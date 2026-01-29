@@ -456,13 +456,13 @@ export default function HomePage() {
                 </div>
                 <div className="text-center">
                   <div className="font-heading font-bold text-2xl text-white tracking-tight flex items-center justify-center gap-0.5">
-                    <StarIcon className="w-8 h-8" />
-                    <StarIcon className="w-8 h-8" />
-                    <StarIcon className="w-8 h-8" />
-                    <StarIcon className="w-8 h-8" />
-                    <StarIcon className="w-8 h-8" />
+                    <StarIcon className="w-6 h-6" />
+                    <StarIcon className="w-6 h-6" />
+                    <StarIcon className="w-6 h-6" />
+                    <StarIcon className="w-6 h-6" />
+                    <StarIcon className="w-6 h-6" />
                   </div>
-                  <div className="font-body text-xs text-white/80 tracking-wide mt-1">
+                  <div className="font-body text-xs text-white/80 tracking-wide mt-3">
                     Komunitas Lokal
                   </div>
                 </div>
