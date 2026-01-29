@@ -472,7 +472,7 @@ export default function AddSpotModal({
                   ? uploadingImage
                     ? "Mengupload foto..."
                     : "Mengirim..."
-                  : "Submit"}
+                  : "Ajukan"}
               </button>
             )}
           </div>
