@@ -22,6 +22,7 @@ import {
   SpinnerIcon,
   TargetIcon,
   CouchIcon,
+  MoneyIcon,
 } from "../../components/icons";
 
 const SPOT_IMAGES = [
@@ -277,7 +278,8 @@ export default function HomePage() {
                     />
                     {spot.biaya && (
                       <div className="absolute top-2 right-2">
-                        <span className="bg-white/95 backdrop-blur-sm text-deepolive font-body text-xs font-semibold px-2.5 py-1 rounded-md border border-slate-200">
+                        <span className="bg-white/95 backdrop-blur-sm text-deepolive font-body text-xs font-semibold px-2.5 py-1 rounded-md border border-slate-200 flex items-center gap-1">
+                          <MoneyIcon className="w-3 h-3 text-green-600" />{" "}
                           {spot.biaya}
                         </span>
                       </div>
