@@ -12,28 +12,28 @@ export default function HomeHero({ user, spots, loading }) {
 
   return (
     <div className="bg-white border-b-4 border-softolive">
-      <div className="max-w-7xl mx-auto px-6 py-20 max-sm:px-4 max-sm:py-12">
+      <div className="max-w-7xl mx-auto px-6 py-16 max-sm:px-4 max-sm:py-10">
         <div className="grid grid-cols-12 gap-8 items-center max-lg:grid-cols-1 max-lg:gap-6">
           <div className="col-span-7 max-lg:col-span-1">
-            <div className="inline-block bg-softolive/10 border border-softolive/30 px-4 py-2 rounded-full mb-5">
+            <div className="inline-block bg-softolive/10 border border-softolive/30 px-4 py-2 rounded-full mb-4">
               <p className="font-body text-sm font-semibold text-softolive tracking-wide flex items-center gap-2">
                 <MapIcon className="w-4 h-4" />
                 Panduan Spot Lokal
               </p>
             </div>
 
-            <h1 className="font-heading font-bold text-5xl text-deepolive mb-5 leading-tight tracking-tight max-sm:text-3xl">
+            <h1 className="font-heading font-bold text-5xl text-deepolive mb-4 leading-tight tracking-tight max-sm:text-3xl">
               Nongkrong di mana?
               <br />
               <span className="text-softolive">Temukan di sini</span>
             </h1>
 
-            <p className="font-body text-lg text-slate-600 mb-8 tracking-wide leading-relaxed max-w-lg max-sm:text-base">
+            <p className="font-body text-lg text-slate-600 mb-6 tracking-wide leading-relaxed max-w-lg max-sm:text-base">
               Butuh tempat ngopi, makan siang, atau kerja santai? Temukan spot
               yang pas sesuai kebutuhanmu hari ini.
             </p>
 
-            <div className="flex gap-6 mb-8 max-sm:gap-4">
+            <div className="flex gap-6 mb-6 max-sm:gap-4">
               <div className="text-center">
                 <div className="font-heading font-bold text-3xl text-deepolive tracking-tight max-sm:text-2xl">
                   {loading ? "..." : spots.length}
