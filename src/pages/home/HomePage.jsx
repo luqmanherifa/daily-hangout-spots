@@ -96,7 +96,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <h1 className="font-heading font-black text-5xl text-deepolive mb-5 leading-tight tracking-tight max-sm:text-3xl">
+              <h1 className="font-heading font-extrabold text-5xl text-deepolive mb-5 leading-tight tracking-tight max-sm:text-3xl">
                 Spot nongkrong terbaik
                 <br />
                 <span className="text-softolive">untuk hari ini</span>
@@ -127,10 +127,10 @@ export default function HomePage() {
                 </div>
                 <div className="w-px bg-slate-200"></div>
                 <div className="text-center">
-                  <div className="font-heading font-bold text-3xl text-deepolive tracking-tight max-sm:text-2xl">
+                  <div className="font-heading font-bold text-2xl text-deepolive tracking-tight max-sm:text-xl">
                     Free
                   </div>
-                  <div className="font-body text-xs text-slate-600 tracking-wide mt-1">
+                  <div className="font-body text-xs text-slate-600 tracking-wide mt-2">
                     Tanpa biaya
                   </div>
                 </div>
@@ -399,7 +399,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <h2 className="font-heading font-black text-4xl text-white mb-4 tracking-tight max-sm:text-2xl">
+            <h2 className="font-heading font-bold text-4xl text-white mb-4 tracking-tight max-sm:text-2xl">
               Punya rekomendasi spot favorit?
             </h2>
 
