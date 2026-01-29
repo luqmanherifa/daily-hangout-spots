@@ -117,18 +117,28 @@ export default function SpotDetailPage() {
 
       <div className="max-w-3xl mx-auto px-6 pb-8 max-sm:px-4 max-sm:pb-6">
         <div className="relative w-full h-64 bg-slate-100 rounded-xl overflow-hidden mb-6 max-sm:h-48 border-b border-slate-200">
-          <img
-            src={getSpotImage(spot)}
-            alt={spot.name}
-            className="w-full h-full object-cover"
-            onError={handleImageError}
-          />
-
-          {!spot.imageUrl && (
-            <div className="absolute inset-0 flex items-center justify-center bg-slate-900/10">
-              <span className="text-white text-sm font-body tracking-wide bg-slate-900/50 px-3 py-1.5 rounded">
-                No Image
-              </span>
+          {spot.imageUrl ? (
+            <img
+              src={getSpotImage(spot)}
+              alt={spot.name}
+              className="w-full h-full object-cover"
+              onError={handleImageError}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-slate-100">
+              <svg
+                className="w-20 h-20 text-slate-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
             </div>
           )}
 
