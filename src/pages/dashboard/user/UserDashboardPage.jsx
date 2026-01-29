@@ -8,7 +8,7 @@ import {
 import { uploadImage } from "../../../services/cloudinaryService.js";
 import UserHeader from "./UserHeader.jsx";
 import UserEmptyState from "./UserEmptyState.jsx";
-import SubmissionTable from "./SubmissionTable";
+import UserSubmissionTable from "./UserSubmissionTable.jsx";
 import AddSpotModal from "./AddSpotModal.jsx";
 import UserDetailModal from "./UserDetailModal.jsx";
 
@@ -198,7 +198,7 @@ export default function UserDashboardPage() {
         ) : submissions.length === 0 ? (
           <UserEmptyState onAddSpot={() => setIsModalOpen(true)} />
         ) : (
-          <SubmissionTable
+          <UserSubmissionTable
             submissions={submissions}
             onViewDetail={setDetailModal}
             onDelete={handleDelete}
