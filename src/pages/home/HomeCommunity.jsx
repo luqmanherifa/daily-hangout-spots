@@ -86,8 +86,8 @@ export default function HomeCommunity({ user, spots, loading }) {
       </div>
 
       <div className="border-t border-white/20">
-        <div className="max-w-3xl mx-auto px-6 py-6 max-sm:px-4 max-sm:py-5">
-          <div className="text-center font-body text-sm text-white/80 tracking-wide">
+        <div className="max-w-3xl mx-auto px-6 py-6 max-sm:px-4 max-sm:py-4">
+          <div className="text-center font-body text-xs text-white/80 tracking-wide">
             © 2026{" "}
             <a
               href="https://github.com/Spesialis-Ngopi-Dadakan"

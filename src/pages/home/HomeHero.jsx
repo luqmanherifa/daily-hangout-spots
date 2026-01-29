@@ -98,9 +98,9 @@ export default function HomeHero({ user, spots, loading }) {
                     Ngopi Cepat
                   </p>
                 </div>
-                <div className="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-xl p-4 aspect-square flex flex-col justify-center items-center">
-                  <BowlFoodIcon className="w-12 h-12 text-orange-700 mb-2" />
-                  <p className="font-body text-sm font-semibold text-orange-900 tracking-wide text-center">
+                <div className="bg-gradient-to-br from-rose-50 to-rose-100 border border-rose-200 rounded-xl p-4 aspect-square flex flex-col justify-center items-center">
+                  <BowlFoodIcon className="w-12 h-12 text-rose-700 mb-2" />
+                  <p className="font-body text-sm font-semibold text-rose-900 tracking-wide text-center">
                     Makan Siang
                   </p>
                 </div>

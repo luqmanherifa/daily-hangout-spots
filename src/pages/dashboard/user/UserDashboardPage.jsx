@@ -203,7 +203,7 @@ export default function UserDashboardPage() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <div className="flex-1">
-        <div className="max-w-7xl mx-auto px-6 py-10 max-sm:px-4 max-sm:py-6">
+        <div className="max-w-7xl mx-auto px-6 py-10 pb-16 max-sm:px-4 max-sm:py-6">
           <UserHeader onAddSpot={() => setIsModalOpen(true)} />
 
           {pageLoading ? (
@@ -223,8 +223,8 @@ export default function UserDashboardPage() {
       </div>
 
       <div className="bg-white border-t border-slate-200">
-        <div className="max-w-3xl mx-auto px-6 py-6 max-sm:px-4 max-sm:py-5">
-          <div className="text-center font-body text-sm text-slate-600 tracking-wide">
+        <div className="max-w-3xl mx-auto px-6 py-6 max-sm:px-4 max-sm:py-4">
+          <div className="text-center font-body text-xs text-slate-600 tracking-wide">
             © 2026{" "}
             <a
               href="https://github.com/Spesialis-Ngopi-Dadakan"
