@@ -2,6 +2,25 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchApprovedSpots, filterSpots } from "../../services/spotService";
 import { useAuthUser } from "../../lib/useAuthUser";
+import {
+  MapIcon,
+  CoffeeIcon,
+  BowlFoodIcon,
+  LaptopIcon,
+  MusicIcon,
+  SearchIcon,
+  WifiIcon,
+  PlugIcon,
+  UserGroupIcon,
+  ClockIcon,
+  LocationIcon,
+  LightbulbIcon,
+  StarIcon,
+  QuietIcon,
+  PartyIcon,
+  NeutralIcon,
+  SpinnerIcon,
+} from "../../components/icons.jsx";
 
 const SPOT_IMAGES = [
   "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&h=300&fit=crop",
@@ -55,7 +74,7 @@ export default function HomePage() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block w-10 h-10 border-3 border-softolive border-t-transparent rounded-full animate-spin mb-3"></div>
+          <SpinnerIcon className="inline-block w-10 h-10 text-softolive animate-spin mb-3" />
           <p className="font-body text-sm text-slate-600 tracking-wide">
             Memuat spot...
           </p>
@@ -71,8 +90,9 @@ export default function HomePage() {
           <div className="grid grid-cols-12 gap-8 items-center max-lg:grid-cols-1 max-lg:gap-6">
             <div className="col-span-7 max-lg:col-span-1">
               <div className="inline-block bg-softolive/10 border border-softolive/30 px-4 py-2 rounded-full mb-5">
-                <p className="font-body text-sm font-semibold text-softolive tracking-wide">
-                  🗺️ Direktori Spot Lokal
+                <p className="font-body text-sm font-semibold text-softolive tracking-wide flex items-center gap-2">
+                  <MapIcon className="w-4 h-4" />
+                  Direktori Spot Lokal
                 </p>
               </div>
 
@@ -144,28 +164,28 @@ export default function HomePage() {
             <div className="col-span-5 max-lg:col-span-1 max-lg:hidden">
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-3">
-                  <div className="bg-gradient-to-br from-softolive/20 to-softolive/10 border border-softolive/30 rounded-xl p-4 aspect-square flex flex-col justify-center items-center">
-                    <div className="text-4xl mb-2">☕</div>
-                    <p className="font-body text-sm font-semibold text-deepolive tracking-wide text-center">
+                  <div className="bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 rounded-xl p-4 aspect-square flex flex-col justify-center items-center">
+                    <CoffeeIcon className="w-12 h-12 text-amber-700 mb-2" />
+                    <p className="font-body text-sm font-semibold text-amber-900 tracking-wide text-center">
                       Ngopi Cepat
                     </p>
                   </div>
-                  <div className="bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 rounded-xl p-4 aspect-square flex flex-col justify-center items-center">
-                    <div className="text-4xl mb-2">🍜</div>
-                    <p className="font-body text-sm font-semibold text-amber-900 tracking-wide text-center">
+                  <div className="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-xl p-4 aspect-square flex flex-col justify-center items-center">
+                    <BowlFoodIcon className="w-12 h-12 text-orange-700 mb-2" />
+                    <p className="font-body text-sm font-semibold text-orange-900 tracking-wide text-center">
                       Makan Siang
                     </p>
                   </div>
                 </div>
                 <div className="space-y-3 mt-8">
                   <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-4 aspect-square flex flex-col justify-center items-center">
-                    <div className="text-4xl mb-2">💻</div>
+                    <LaptopIcon className="w-12 h-12 text-blue-700 mb-2" />
                     <p className="font-body text-sm font-semibold text-blue-900 tracking-wide text-center">
                       Kerja Remote
                     </p>
                   </div>
                   <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-xl p-4 aspect-square flex flex-col justify-center items-center">
-                    <div className="text-4xl mb-2">🎵</div>
+                    <MusicIcon className="w-12 h-12 text-purple-700 mb-2" />
                     <p className="font-body text-sm font-semibold text-purple-900 tracking-wide text-center">
                       Santai Sore
                     </p>
@@ -187,8 +207,8 @@ export default function HomePage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
-                🔍
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
+                <SearchIcon className="w-4 h-4" />
               </span>
             </div>
 
@@ -223,7 +243,7 @@ export default function HomePage() {
 
         {filtered.length === 0 && (
           <div className="text-center py-20 bg-slate-50 rounded-xl border border-slate-200">
-            <div className="text-5xl mb-3">🔍</div>
+            <SearchIcon className="w-16 h-16 text-slate-300 mx-auto mb-3" />
             <p className="font-heading font-bold text-xl text-deepolive mb-2 tracking-tight">
               Tidak ada hasil
             </p>
@@ -282,7 +302,7 @@ export default function HomePage() {
 
                 <div className="mb-4 pb-4 border-b border-slate-200">
                   <p className="font-body text-xs text-slate-700 tracking-wide flex items-start gap-2">
-                    <span className="text-base mt-0.5 flex-shrink-0">📍</span>
+                    <LocationIcon className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
                     <span className="line-clamp-1">{spot.location}</span>
                   </p>
                 </div>
@@ -290,22 +310,26 @@ export default function HomePage() {
                 <div className="space-y-2.5">
                   <div className="flex flex-wrap gap-1.5">
                     {spot.wifi === "Ada" && (
-                      <span className="font-body text-xs bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md font-semibold tracking-wide border border-blue-200">
-                        📶 WiFi
+                      <span className="font-body text-xs bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md font-semibold tracking-wide border border-blue-200 flex items-center gap-1">
+                        <WifiIcon className="w-3 h-3" />
+                        WiFi
                       </span>
                     )}
                     {spot.stopkontak === "Ada" && (
-                      <span className="font-body text-xs bg-amber-50 text-amber-700 px-2.5 py-1 rounded-md font-semibold tracking-wide border border-amber-200">
-                        🔌 Stopkontak
+                      <span className="font-body text-xs bg-amber-50 text-amber-700 px-2.5 py-1 rounded-md font-semibold tracking-wide border border-amber-200 flex items-center gap-1">
+                        <PlugIcon className="w-3 h-3" />
+                        Stopkontak
                       </span>
                     )}
                     {spot.suasana && (
-                      <span className="font-body text-xs bg-purple-50 text-purple-700 px-2.5 py-1 rounded-md font-semibold tracking-wide border border-purple-200">
-                        {spot.suasana === "Sepi"
-                          ? "🤫"
-                          : spot.suasana === "Ramai"
-                            ? "🎉"
-                            : "😊"}{" "}
+                      <span className="font-body text-xs bg-purple-50 text-purple-700 px-2.5 py-1 rounded-md font-semibold tracking-wide border border-purple-200 flex items-center gap-1">
+                        {spot.suasana === "Sepi" ? (
+                          <QuietIcon className="w-3 h-3" />
+                        ) : spot.suasana === "Ramai" ? (
+                          <PartyIcon className="w-3 h-3" />
+                        ) : (
+                          <NeutralIcon className="w-3 h-3" />
+                        )}
                         {spot.suasana}
                       </span>
                     )}
@@ -313,8 +337,9 @@ export default function HomePage() {
 
                   {spot.waktu && spot.waktu.length > 0 && (
                     <div className="flex items-center gap-1.5">
+                      <ClockIcon className="w-3 h-3 text-slate-500 flex-shrink-0" />
                       <span className="font-body text-xs text-slate-500 tracking-wide">
-                        ⏰ Cocok:
+                        Cocok:
                       </span>
                       <div className="flex flex-wrap gap-1">
                         {spot.waktu.slice(0, 3).map((w) => (
@@ -336,8 +361,9 @@ export default function HomePage() {
 
                   {spot.tipeKunjungan && spot.tipeKunjungan.length > 0 && (
                     <div className="flex items-center gap-1.5">
+                      <UserGroupIcon className="w-3 h-3 text-slate-500 flex-shrink-0" />
                       <span className="font-body text-xs text-slate-500 tracking-wide">
-                        👥 Untuk:
+                        Untuk:
                       </span>
                       <div className="flex flex-wrap gap-1">
                         {spot.tipeKunjungan.slice(0, 2).map((t) => (
@@ -367,8 +393,9 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 py-20 max-sm:px-4 max-sm:py-12">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-block bg-white/20 backdrop-blur-sm border border-white/30 px-4 py-2 rounded-full mb-5">
-              <p className="font-body text-sm font-semibold text-white tracking-wide">
-                💡 Bantu Komunitas
+              <p className="font-body text-sm font-semibold text-white tracking-wide flex items-center gap-2 justify-center">
+                <LightbulbIcon className="w-4 h-4" />
+                Bantu Komunitas
               </p>
             </div>
 
@@ -431,8 +458,12 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="font-heading font-bold text-2xl text-white tracking-tight">
-                    ⭐⭐⭐⭐⭐
+                  <div className="font-heading font-bold text-2xl text-white tracking-tight flex items-center justify-center gap-0.5">
+                    <StarIcon className="w-8 h-8" />
+                    <StarIcon className="w-8 h-8" />
+                    <StarIcon className="w-8 h-8" />
+                    <StarIcon className="w-8 h-8" />
+                    <StarIcon className="w-8 h-8" />
                   </div>
                   <div className="font-body text-xs text-white/80 tracking-wide mt-1">
                     Komunitas Lokal
