@@ -5,6 +5,7 @@ import {
   fetchUserSubmissions,
   deleteSubmission,
 } from "../../services/submissionService";
+import { uploadImage, getThumbnailUrl } from "../../services/cloudinaryService";
 
 const FORM_CONFIG = [
   {
@@ -101,6 +102,10 @@ export default function UserDashboardPage() {
   const [wifi, setWifi] = useState("");
   const [stopkontak, setStopkontak] = useState("");
 
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+
   const [formData, setFormData] = useState(() => {
     const initialData = {};
     FORM_CONFIG.forEach((field) => {
@@ -117,7 +122,7 @@ export default function UserDashboardPage() {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
 
-  const totalSteps = 2 + FORM_CONFIG.length;
+  const totalSteps = 3 + FORM_CONFIG.length;
 
   const loadSubmissions = async () => {
     if (!auth.currentUser) {
@@ -141,6 +146,35 @@ export default function UserDashboardPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("File harus berupa gambar");
+      return;
+    }
+
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert("Ukuran file maksimal 5MB");
+      return;
+    }
+
+    setSelectedImage(file);
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+  };
+
   const handleMultiSelect = (fieldKey, option) => {
     setFormData((prev) => {
       const currentValues = prev[fieldKey] || [];
@@ -162,7 +196,10 @@ export default function UserDashboardPage() {
     if (currentStep === 1) {
       return wifi && stopkontak;
     }
-    const fieldIndex = currentStep - 2;
+    if (currentStep === 2) {
+      return true;
+    }
+    const fieldIndex = currentStep - 3;
     const field = FORM_CONFIG[fieldIndex];
     if (field.type === "multi") {
       return formData[field.key] && formData[field.key].length > 0;
@@ -188,6 +225,8 @@ export default function UserDashboardPage() {
     setLocation("");
     setWifi("");
     setStopkontak("");
+    setSelectedImage(null);
+    setImagePreview(null);
     const resetData = {};
     FORM_CONFIG.forEach((field) => {
       resetData[field.key] = field.type === "multi" ? [] : "";
@@ -201,6 +240,17 @@ export default function UserDashboardPage() {
     setLoading(true);
 
     try {
+      let imageUrl = "";
+      let imagePublicId = "";
+
+      if (selectedImage) {
+        setUploadingImage(true);
+        const result = await uploadImage(selectedImage);
+        imageUrl = result.url;
+        imagePublicId = result.publicId;
+        setUploadingImage(false);
+      }
+
       await submitSpot(
         {
           name,
@@ -208,6 +258,8 @@ export default function UserDashboardPage() {
           location,
           wifi,
           stopkontak,
+          imageUrl,
+          imagePublicId,
           ...formData,
           adminNote: "",
         },
@@ -219,6 +271,7 @@ export default function UserDashboardPage() {
       setIsModalOpen(false);
     } catch (err) {
       alert(err.message);
+      setUploadingImage(false);
     } finally {
       setLoading(false);
     }
@@ -359,7 +412,58 @@ export default function UserDashboardPage() {
       );
     }
 
-    const fieldIndex = currentStep - 2;
+    if (currentStep === 2) {
+      return (
+        <div className="space-y-4">
+          <div>
+            <label className="font-body text-sm font-medium text-slate-700 mb-2 block tracking-wide">
+              Foto Spot
+            </label>
+            <p className="font-body text-xs text-slate-600 mb-3 tracking-wide">
+              Upload foto tempat ini (opsional, maks 5MB)
+            </p>
+
+            {!imagePreview ? (
+              <label className="block w-full border-2 border-dashed border-slate-300 rounded-lg p-8 text-center cursor-pointer hover:border-softolive transition-colors bg-slate-50">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                  className="hidden"
+                />
+                <div className="text-4xl mb-2">📷</div>
+                <p className="font-body text-sm text-slate-600 tracking-wide">
+                  Klik untuk pilih foto
+                </p>
+                <p className="font-body text-xs text-slate-500 tracking-wide mt-1">
+                  JPG, PNG, atau GIF (maks 5MB)
+                </p>
+              </label>
+            ) : (
+              <div className="relative">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="w-full h-64 object-cover rounded-lg border border-slate-300"
+                />
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1.5 rounded-md text-xs font-semibold hover:bg-red-600 transition-colors"
+                >
+                  Hapus
+                </button>
+                <p className="font-body text-xs text-slate-600 tracking-wide mt-2">
+                  {selectedImage?.name}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    const fieldIndex = currentStep - 3;
     const field = FORM_CONFIG[fieldIndex];
 
     if (field.type === "multi") {
@@ -509,7 +613,18 @@ export default function UserDashboardPage() {
                         }`}
                       >
                         <td className="font-body px-4 py-3 text-deepolive text-sm tracking-wide">
-                          {s.name}
+                          <div className="flex items-center gap-2">
+                            {s.imageUrl && (
+                              <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0">
+                                <img
+                                  src={getThumbnailUrl(s.imageUrl)}
+                                  alt={s.name}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                            )}
+                            <span>{s.name}</span>
+                          </div>
                         </td>
                         <td className="font-body px-4 py-3 text-slate-600 text-sm tracking-wide">
                           {s.location}
@@ -633,7 +748,11 @@ export default function UserDashboardPage() {
                     disabled={loading || !canProceedCurrentStep()}
                     className="flex-1 bg-softolive text-white font-body font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-deepolive transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed tracking-wide"
                   >
-                    {loading ? "Mengirim..." : "Submit"}
+                    {loading
+                      ? uploadingImage
+                        ? "Mengupload foto..."
+                        : "Mengirim..."
+                      : "Submit"}
                   </button>
                 )}
               </div>
@@ -675,6 +794,16 @@ export default function UserDashboardPage() {
             </div>
 
             <div className="space-y-4">
+              {detailModal.imageUrl && (
+                <div className="border-b border-slate-200 pb-4">
+                  <img
+                    src={detailModal.imageUrl}
+                    alt={detailModal.name}
+                    className="w-full h-64 object-cover rounded-lg border border-slate-300"
+                  />
+                </div>
+              )}
+
               <div className="border-b border-slate-200 pb-4">
                 <h3 className="font-body font-semibold text-sm text-slate-700 mb-3 tracking-wide">
                   Informasi Dasar

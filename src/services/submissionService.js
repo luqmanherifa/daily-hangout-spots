@@ -15,6 +15,8 @@ import { db } from "../lib/firebase";
 export async function submitSpot(data, user) {
   return addDoc(collection(db, "spotSubmissions"), {
     ...data,
+    imageUrl: data.imageUrl || "",
+    imagePublicId: data.imagePublicId || "",
     createdBy: user.uid,
     createdByEmail: user.email ?? null,
     createdAt: serverTimestamp(),
