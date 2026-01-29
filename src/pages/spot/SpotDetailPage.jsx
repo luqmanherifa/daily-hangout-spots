@@ -23,6 +23,7 @@ import {
   PeopleGroupIcon,
   DoorOpenIcon,
   RepeatIcon,
+  ImagePlaceholderIcon,
 } from "../../components/icons.jsx";
 
 export default function SpotDetailPage() {
@@ -83,7 +84,7 @@ export default function SpotDetailPage() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center px-4">
         <div className="text-center max-w-md">
-          <SearchIcon className="w-20 h-20 text-slate-300 mx-auto mb-4" />
+          <SearchIcon className="w-20 h-20 text-slate-400 mx-auto mb-4" />
           <h1 className="font-heading font-bold text-2xl text-deepolive mb-2 tracking-tight">
             Spot tidak ditemukan
           </h1>
@@ -126,19 +127,7 @@ export default function SpotDetailPage() {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-slate-100">
-              <svg
-                className="w-20 h-20 text-slate-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
+              <ImagePlaceholderIcon className="w-16 h-16 text-slate-400" />
             </div>
           )}
 
