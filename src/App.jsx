@@ -6,8 +6,8 @@ import HomePage from "./pages/home/HomePage";
 import SpotDetailPage from "./pages/spot/SpotDetailPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
-import UserDashboardPage from "./pages/dashboard/UserDashboardPage";
-import AdminDashboardPage from "./pages/dashboard/AdminDashboardPage";
+import UserDashboardPage from "./pages/dashboard/user/UserDashboardPage";
+import AdminDashboardPage from "./pages/dashboard/admin/AdminDashboardPage";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminRoute from "./routes/AdminRoute";
