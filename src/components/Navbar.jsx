@@ -70,7 +70,7 @@ export default function Navbar() {
                   </button>
 
                   {isDropdownOpen && (
-                    <div className="absolute right-0 mt-1 w-40 bg-white border border-slate-200 rounded-lg shadow-lg overflow-hidden z-50">
+                    <div className="absolute right-0 mt-1 w-40 bg-white border border-slate-200 rounded-lg overflow-hidden z-50">
                       <Link
                         to="/dashboard"
                         onClick={() => setIsDropdownOpen(false)}

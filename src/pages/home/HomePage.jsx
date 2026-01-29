@@ -20,7 +20,9 @@ import {
   PartyIcon,
   NeutralIcon,
   SpinnerIcon,
-} from "../../components/icons.jsx";
+  TargetIcon,
+  CouchIcon,
+} from "../../components/icons";
 
 const SPOT_IMAGES = [
   "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&h=300&fit=crop",
@@ -70,19 +72,6 @@ export default function HomePage() {
     setFiltered(filterSpots(spots, { search, wifiOnly }));
   }, [search, wifiOnly, spots]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <SpinnerIcon className="inline-block w-10 h-10 text-softolive animate-spin mb-3" />
-          <p className="font-body text-sm text-slate-600 tracking-wide">
-            Memuat spot...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-white">
       <div className="bg-white border-b-4 border-softolive">
@@ -97,9 +86,9 @@ export default function HomePage() {
               </div>
 
               <h1 className="font-heading font-extrabold text-5xl text-deepolive mb-5 leading-tight tracking-tight max-sm:text-3xl">
-                Spot nongkrong terbaik
+                Cari spot nongkrong?
                 <br />
-                <span className="text-softolive">untuk hari ini</span>
+                <span className="text-softolive">Ada semua di sini</span>
               </h1>
 
               <p className="font-body text-lg text-slate-600 mb-8 tracking-wide leading-relaxed max-w-xl max-sm:text-base">
@@ -110,7 +99,7 @@ export default function HomePage() {
               <div className="flex gap-6 mb-8 max-sm:gap-4">
                 <div className="text-center">
                   <div className="font-heading font-bold text-3xl text-deepolive tracking-tight max-sm:text-2xl">
-                    {spots.length}
+                    {loading ? "..." : spots.length}
                   </div>
                   <div className="font-body text-xs text-slate-600 tracking-wide mt-1">
                     Spot tersedia
@@ -119,7 +108,9 @@ export default function HomePage() {
                 <div className="w-px bg-slate-200"></div>
                 <div className="text-center">
                   <div className="font-heading font-bold text-3xl text-softolive tracking-tight max-sm:text-2xl">
-                    {spots.filter((s) => s.wifi === "Ada").length}
+                    {loading
+                      ? "..."
+                      : spots.filter((s) => s.wifi === "Ada").length}
                   </div>
                   <div className="font-body text-xs text-slate-600 tracking-wide mt-1">
                     Ada WiFi
@@ -228,165 +219,173 @@ export default function HomePage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-12 max-sm:px-4 max-sm:py-8">
-        {filtered.length > 0 && (
-          <div className="mb-8">
-            <h2 className="font-heading font-bold text-2xl text-deepolive mb-2 tracking-tight">
-              {search || wifiOnly ? "Hasil Pencarian" : "Semua Spot"}
-            </h2>
+        {loading ? (
+          <div className="text-center py-20">
+            <SpinnerIcon className="inline-block w-12 h-12 text-softolive animate-spin mb-3" />
             <p className="font-body text-sm text-slate-600 tracking-wide">
-              {filtered.length} tempat ditemukan
-              {wifiOnly && " dengan WiFi"}
-              {search && ` untuk "${search}"`}
+              Memuat spot...
             </p>
           </div>
-        )}
-
-        {filtered.length === 0 && (
-          <div className="text-center py-20 bg-slate-50 rounded-xl border border-slate-200">
-            <SearchIcon className="w-16 h-16 text-slate-300 mx-auto mb-3" />
-            <p className="font-heading font-bold text-xl text-deepolive mb-2 tracking-tight">
-              Tidak ada hasil
-            </p>
-            <p className="font-body text-sm text-slate-600 tracking-wide mb-5">
-              Coba kata kunci lain atau hapus filter
-            </p>
-            <button
-              onClick={() => {
-                setSearch("");
-                setWifiOnly(false);
-              }}
-              className="bg-softolive text-white font-body font-semibold text-sm px-6 py-2.5 rounded-lg hover:bg-deepolive transition-colors tracking-wide"
-            >
-              Reset Pencarian
-            </button>
-          </div>
-        )}
-
-        <div className="grid grid-cols-3 gap-6 max-lg:grid-cols-2 max-sm:grid-cols-1">
-          {filtered.map((spot) => (
-            <div
-              key={spot.id}
-              onClick={() => navigate(`/spot/${spot.id}`)}
-              className="bg-white border-2 border-slate-200 rounded-2xl overflow-hidden hover:border-softolive transition-all cursor-pointer group"
-            >
-              <div className="relative w-full h-52 bg-slate-100 overflow-hidden">
-                <img
-                  src={imageMap[spot.id] || SPOT_IMAGES[0]}
-                  alt={spot.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                {spot.biaya && (
-                  <div className="absolute top-3 right-3">
-                    <span className="bg-white/95 backdrop-blur-sm text-deepolive font-body text-xs font-bold px-3 py-1.5 rounded-full border border-slate-200">
-                      {spot.biaya}
-                    </span>
-                  </div>
-                )}
-                {spot.kebutuhan && spot.kebutuhan.length > 0 && (
-                  <div className="absolute bottom-3 left-3">
-                    <span className="bg-softolive text-white font-body text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide">
-                      {spot.kebutuhan[0]}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              <div className="p-5">
-                <h3 className="font-heading font-bold text-xl text-deepolive mb-2 tracking-tight group-hover:text-softolive transition-colors line-clamp-1">
-                  {spot.name}
-                </h3>
-
-                <p className="font-body text-sm text-slate-600 tracking-wide leading-relaxed mb-4 line-clamp-2 min-h-[40px]">
-                  {spot.description}
+        ) : (
+          <>
+            {filtered.length > 0 && (
+              <div className="mb-8">
+                <h2 className="font-heading font-bold text-2xl text-deepolive mb-2 tracking-tight">
+                  {search || wifiOnly ? "Hasil Pencarian" : "Semua Spot"}
+                </h2>
+                <p className="font-body text-sm text-slate-600 tracking-wide">
+                  {filtered.length} tempat ditemukan
+                  {wifiOnly && " dengan WiFi"}
+                  {search && ` untuk "${search}"`}
                 </p>
+              </div>
+            )}
 
-                <div className="mb-4 pb-4 border-b border-slate-200">
-                  <p className="font-body text-xs text-slate-700 tracking-wide flex items-start gap-2">
-                    <LocationIcon className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                    <span className="line-clamp-1">{spot.location}</span>
-                  </p>
-                </div>
+            {filtered.length === 0 && (
+              <div className="text-center py-20 bg-slate-50 rounded-xl border border-slate-200">
+                <SearchIcon className="w-16 h-16 text-slate-300 mx-auto mb-3" />
+                <p className="font-heading font-bold text-xl text-deepolive mb-2 tracking-tight">
+                  Tidak ada hasil
+                </p>
+                <p className="font-body text-sm text-slate-600 tracking-wide mb-5">
+                  Coba kata kunci lain atau hapus filter
+                </p>
+                <button
+                  onClick={() => {
+                    setSearch("");
+                    setWifiOnly(false);
+                  }}
+                  className="bg-softolive text-white font-body font-semibold text-sm px-6 py-2.5 rounded-lg hover:bg-deepolive transition-colors tracking-wide"
+                >
+                  Reset Pencarian
+                </button>
+              </div>
+            )}
 
-                <div className="space-y-2.5">
-                  <div className="flex flex-wrap gap-1.5">
-                    {spot.wifi === "Ada" && (
-                      <span className="font-body text-xs bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md font-semibold tracking-wide border border-blue-200 flex items-center gap-1">
-                        <WifiIcon className="w-3 h-3" />
-                        WiFi
-                      </span>
-                    )}
-                    {spot.stopkontak === "Ada" && (
-                      <span className="font-body text-xs bg-amber-50 text-amber-700 px-2.5 py-1 rounded-md font-semibold tracking-wide border border-amber-200 flex items-center gap-1">
-                        <PlugIcon className="w-3 h-3" />
-                        Stopkontak
-                      </span>
-                    )}
-                    {spot.suasana && (
-                      <span className="font-body text-xs bg-purple-50 text-purple-700 px-2.5 py-1 rounded-md font-semibold tracking-wide border border-purple-200 flex items-center gap-1">
-                        {spot.suasana === "Sepi" ? (
-                          <QuietIcon className="w-3 h-3" />
-                        ) : spot.suasana === "Ramai" ? (
-                          <PartyIcon className="w-3 h-3" />
-                        ) : (
-                          <NeutralIcon className="w-3 h-3" />
-                        )}
-                        {spot.suasana}
-                      </span>
+            <div className="grid grid-cols-3 gap-5 max-lg:grid-cols-2 max-sm:grid-cols-1">
+              {filtered.map((spot) => (
+                <div
+                  key={spot.id}
+                  onClick={() => navigate(`/spot/${spot.id}`)}
+                  className="bg-white border border-slate-200 rounded-xl overflow-hidden hover:border-softolive transition-all cursor-pointer group"
+                >
+                  <div className="relative w-full h-48 bg-slate-100 overflow-hidden">
+                    <img
+                      src={imageMap[spot.id] || SPOT_IMAGES[0]}
+                      alt={spot.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {spot.biaya && (
+                      <div className="absolute top-2 right-2">
+                        <span className="bg-white/95 backdrop-blur-sm text-deepolive font-body text-xs font-semibold px-2.5 py-1 rounded-md border border-slate-200">
+                          {spot.biaya}
+                        </span>
+                      </div>
                     )}
                   </div>
 
-                  {spot.waktu && spot.waktu.length > 0 && (
-                    <div className="flex items-center gap-1.5">
-                      <ClockIcon className="w-3 h-3 text-slate-500 flex-shrink-0" />
-                      <span className="font-body text-xs text-slate-500 tracking-wide">
-                        Cocok:
-                      </span>
-                      <div className="flex flex-wrap gap-1">
-                        {spot.waktu.slice(0, 3).map((w) => (
-                          <span
-                            key={w}
-                            className="font-body text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium tracking-wide"
-                          >
-                            {w}
-                          </span>
-                        ))}
-                        {spot.waktu.length > 3 && (
-                          <span className="font-body text-xs text-slate-500 font-medium">
-                            +{spot.waktu.length - 3}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  )}
+                  <div className="p-4">
+                    <h3 className="font-heading font-bold text-lg text-deepolive mb-1.5 tracking-tight group-hover:text-softolive transition-colors line-clamp-1">
+                      {spot.name}
+                    </h3>
 
-                  {spot.tipeKunjungan && spot.tipeKunjungan.length > 0 && (
-                    <div className="flex items-center gap-1.5">
-                      <UserGroupIcon className="w-3 h-3 text-slate-500 flex-shrink-0" />
-                      <span className="font-body text-xs text-slate-500 tracking-wide">
-                        Untuk:
-                      </span>
-                      <div className="flex flex-wrap gap-1">
-                        {spot.tipeKunjungan.slice(0, 2).map((t) => (
-                          <span
-                            key={t}
-                            className="font-body text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium tracking-wide"
-                          >
-                            {t}
-                          </span>
-                        ))}
-                        {spot.tipeKunjungan.length > 2 && (
-                          <span className="font-body text-xs text-slate-500 font-medium">
-                            +{spot.tipeKunjungan.length - 2}
-                          </span>
-                        )}
-                      </div>
+                    <div className="mb-3 flex items-start gap-1.5">
+                      <LocationIcon className="w-3.5 h-3.5 text-red-500 mt-0.5 flex-shrink-0" />
+                      <p className="font-body text-xs text-slate-600 tracking-wide line-clamp-1">
+                        {spot.location}
+                      </p>
                     </div>
-                  )}
+
+                    <p className="font-body text-xs text-slate-600 tracking-wide leading-relaxed mb-3 line-clamp-2 min-h-[32px]">
+                      {spot.description}
+                    </p>
+
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      {spot.wifi === "Ada" && (
+                        <span className="font-body text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-medium tracking-wide border border-blue-200 flex items-center gap-1">
+                          <WifiIcon className="w-3 h-3" />
+                          WiFi
+                        </span>
+                      )}
+                      {spot.stopkontak === "Ada" && (
+                        <span className="font-body text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded font-medium tracking-wide border border-amber-200 flex items-center gap-1">
+                          <PlugIcon className="w-3 h-3" />
+                          Stopkontak
+                        </span>
+                      )}
+                      {spot.suasana && (
+                        <span className="font-body text-xs bg-purple-50 text-purple-700 px-2 py-0.5 rounded font-medium tracking-wide border border-purple-200 flex items-center gap-1">
+                          {spot.suasana === "Sepi" ? (
+                            <QuietIcon className="w-3 h-3" />
+                          ) : spot.suasana === "Ramai" ? (
+                            <PartyIcon className="w-3 h-3" />
+                          ) : (
+                            <NeutralIcon className="w-3 h-3" />
+                          )}
+                          {spot.suasana}
+                        </span>
+                      )}
+                      {spot.kenyamanan && (
+                        <span className="font-body text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded font-medium tracking-wide border border-green-200 flex gap-1 items-center">
+                          <CouchIcon className="w-3 h-3" /> {spot.kenyamanan}
+                        </span>
+                      )}
+                    </div>
+
+                    {spot.kebutuhan && spot.kebutuhan.length > 0 && (
+                      <div className="mb-2.5 pb-2.5 border-t border-slate-100 pt-2.5">
+                        <div className="flex items-center gap-1 mb-1.5">
+                          <TargetIcon className="w-3 h-3 text-softolive" />
+                          <span className="font-body text-xs text-slate-500 font-medium">
+                            Cocok untuk:
+                          </span>
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                          {spot.kebutuhan.slice(0, 2).map((item) => (
+                            <span
+                              key={item}
+                              className="font-body text-xs bg-slate-50 text-slate-700 px-2 py-0.5 rounded font-medium tracking-wide border border-slate-200"
+                            >
+                              {item}
+                            </span>
+                          ))}
+                          {spot.kebutuhan.length > 2 && (
+                            <span className="font-body text-xs text-slate-500 font-medium">
+                              +{spot.kebutuhan.length - 2}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="space-y-1.5 text-xs">
+                      {spot.waktu && spot.waktu.length > 0 && (
+                        <div className="flex items-center gap-1">
+                          <ClockIcon className="w-3 h-3 text-slate-400 flex-shrink-0" />
+                          <span className="text-slate-500">
+                            {spot.waktu.slice(0, 2).join(", ")}
+                            {spot.waktu.length > 2 &&
+                              ` +${spot.waktu.length - 2}`}
+                          </span>
+                        </div>
+                      )}
+                      {spot.tipeKunjungan && spot.tipeKunjungan.length > 0 && (
+                        <div className="flex items-center gap-1">
+                          <UserGroupIcon className="w-3 h-3 text-slate-400 flex-shrink-0" />
+                          <span className="text-slate-500">
+                            {spot.tipeKunjungan.slice(0, 2).join(", ")}
+                            {spot.tipeKunjungan.length > 2 &&
+                              ` +${spot.tipeKunjungan.length - 2}`}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </>
+        )}
       </div>
 
       <div className="bg-gradient-to-br from-softolive to-deepolive border-t-4 border-softolive">
@@ -399,7 +398,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <h2 className="font-heading font-bold text-4xl text-white mb-4 tracking-tight max-sm:text-2xl">
+            <h2 className="font-heading font-semibold text-4xl text-white mb-4 tracking-tight max-sm:text-2xl">
               Punya rekomendasi spot favorit?
             </h2>
 
@@ -440,7 +439,7 @@ export default function HomePage() {
               <div className="grid grid-cols-3 gap-6 max-sm:gap-4">
                 <div className="text-center">
                   <div className="font-heading font-bold text-2xl text-white tracking-tight">
-                    {spots.length}+
+                    {loading ? "..." : `${spots.length}+`}
                   </div>
                   <div className="font-body text-xs text-white/80 tracking-wide mt-1">
                     Spot Tersedia
